@@ -99,11 +99,11 @@ class GoogleSignInAccount implements GoogleIdentity {
     if (response.idToken == null) {
       response.idToken = _idToken;
     }
-    
+
     if (response.serverAuthCode == null) {
       response.serverAuthCode = _serverAuthCode;
     }
-    
+
     return GoogleSignInAuthentication._(response);
   }
 
@@ -142,7 +142,8 @@ class GoogleSignInAccount implements GoogleIdentity {
   }
 
   @override
-  int get hashCode => hashValues(displayName, email, id, photoUrl, _idToken, _serverAuthCode);
+  int get hashCode =>
+      hashValues(displayName, email, id, photoUrl, _idToken, _serverAuthCode);
 
   @override
   String toString() {
@@ -364,7 +365,7 @@ class GoogleSignIn {
   /// Re-authentication can be triggered only after [signOut] or [disconnect].
   Future<GoogleSignInAccount> signIn() {
     final Future<GoogleSignInAccount> result =
-    _addMethodCall(GoogleSignInPlatform.instance.signIn, canSkipCall: true);
+        _addMethodCall(GoogleSignInPlatform.instance.signIn, canSkipCall: true);
     bool isCanceled(dynamic error) =>
         error is PlatformException && error.code == kSignInCanceledError;
     return result.catchError((dynamic _) => null, test: isCanceled);
@@ -372,7 +373,7 @@ class GoogleSignIn {
 
   Future<GoogleSignInAccount> grantOfflineAccess() {
     final Future<GoogleSignInAccount> result =
-    _addMethodCall(GoogleSignInPlatform.instance.grantOfflineAccess, canSkipCall: true);
+        _addMethodCall(GoogleSignInPlatform.instance.grantOfflineAccess);
     bool isCanceled(dynamic error) =>
         error is PlatformException && error.code == kSignInCanceledError;
     return result.catchError((dynamic _) => null, test: isCanceled);
