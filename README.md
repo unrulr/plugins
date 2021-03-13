@@ -1,3 +1,22 @@
+## Notes on Fork
+
+This fork helps us retrieve a `serverAuthCode` when we need to authorize users for Google Classroom.
+
+1. On iOS, uses the `SERVER_CLIENT_ID` in `GoogleServices-Info.plist` to retrieve a `serverAuthCode` from Google (on sign-in). 
+2. On Android, uses `google-services.json` to do the same.
+3. On the Web, wraps `grantOfflineAccess` to grab the `serverAuthCode`.
+
+I modified the fork to throw if `grantOfflineAccess` was called on either Android or iOS, because it's a no-op, and returns the current Account, unmodified.
+
+This exposes `serverAuthCode` on the `GoogleSignInUserData` object because that's the contract needed to, in turn, set the `serverAuthCode` on the `GoogleSignInAuthentication` object.
+
+Some PRs to track, although they also look unlikely to merge:
+- https://github.com/flutter/plugins/pull/2792
+- https://github.com/flutter/plugins/pull/2788
+
+Main(?) Issue:
+- https://github.com/flutter/flutter/issues/57712#issuecomment-703382420
+
 # Flutter plugins
 
 [![Build Status](https://api.cirrus-ci.com/github/flutter/plugins.svg)](https://cirrus-ci.com/github/flutter/plugins/master)
