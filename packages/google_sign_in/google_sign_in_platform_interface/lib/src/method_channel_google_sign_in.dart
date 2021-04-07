@@ -47,10 +47,11 @@ class MethodChannelGoogleSignIn extends GoogleSignInPlatform {
   }
 
   @override
-  Future<GoogleSignInUserData> grantOfflineAccess() {
-    return channel
-        .invokeMapMethod<String, dynamic>('grantOfflineAccess')
-        .then(getUserDataFromMap);
+  Future<GoogleSignInUserData> grantOfflineAccess(List<String> scopes) {
+    return channel.invokeMapMethod<String, dynamic>(
+      'grantOfflineAccess',
+      <String, List<String>>{'scopes': scopes},
+    ).then(getUserDataFromMap);
   }
 
   @override

@@ -371,9 +371,10 @@ class GoogleSignIn {
     return result.catchError((dynamic _) => null, test: isCanceled);
   }
 
-  Future<GoogleSignInAccount> grantOfflineAccess() {
-    final Future<GoogleSignInAccount> result =
-        _addMethodCall(GoogleSignInPlatform.instance.grantOfflineAccess);
+  Future<GoogleSignInAccount> grantOfflineAccess(List<String> scopes) {
+    final Future<GoogleSignInAccount> result = _addMethodCall(
+      () => GoogleSignInPlatform.instance.grantOfflineAccess(scopes),
+    );
     bool isCanceled(dynamic error) =>
         error is PlatformException && error.code == kSignInCanceledError;
     return result.catchError((dynamic _) => null, test: isCanceled);

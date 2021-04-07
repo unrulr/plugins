@@ -138,17 +138,20 @@ class GoogleSignInPlugin extends GoogleSignInPlatform {
         code: reason.error,
         message: 'Exception raised from GoogleAuth.signIn()',
         details:
-        'https://developers.google.com/identity/sign-in/web/reference#error_codes_2',
+            'https://developers.google.com/identity/sign-in/web/reference#error_codes_2',
       );
     }
   }
 
   @override
-  Future<GoogleSignInUserData> grantOfflineAccess() async {
+  Future<GoogleSignInUserData> grantOfflineAccess(List<String> scopes) async {
     await initialized;
     try {
-      print('## grantOfflineAccess');
-      final response = await auth2.getAuthInstance().grantOfflineAccess();
+      final response = await auth2
+          .getAuthInstance()
+          .grantOfflineAccess(auth2.OfflineAccessOptions(
+            scope: scopes.join(" "),
+          ));
       final currentUser = await auth2.getAuthInstance().currentUser.get();
       return gapiUserToPluginUserData(currentUser, response.code);
     } on auth2.GoogleAuthSignInError catch (reason) {
@@ -156,7 +159,7 @@ class GoogleSignInPlugin extends GoogleSignInPlatform {
         code: reason.error,
         message: 'Exception raised from GoogleAuth.grantOfflineAccess()',
         details:
-        'https://developers.google.com/identity/sign-in/web/reference#error_codes_2',
+            'https://developers.google.com/identity/sign-in/web/reference#error_codes_2',
       );
     }
   }
