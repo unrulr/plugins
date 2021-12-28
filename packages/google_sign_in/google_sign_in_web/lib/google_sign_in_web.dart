@@ -158,6 +158,10 @@ class GoogleSignInPlugin extends GoogleSignInPlatform {
     }
   }
 
+  /// On web, this will not get a serverAuthCode, because that lives separately
+  /// from the authResponse.
+  ///
+  /// To get the serverAuthCode, see [grantOfflineAccess]
   @override
   Future<GoogleSignInTokenData> getTokens(
       {required String email, bool? shouldRecoverAuth}) async {
@@ -236,5 +240,32 @@ class GoogleSignInPlugin extends GoogleSignInPlatform {
         .grant(auth2.SigninOptions(scope: missingScopes.join(' ')));
 
     return response != null;
+  }
+
+  @override
+  Future<GoogleSignInUserData?> grantOfflineAccess(List<String> scopes) async {
+    await initialized;
+
+    try {
+      final response = await auth2
+          .getAuthInstance()
+          ?.grantOfflineAccess(auth2.OfflineAccessOptions(
+            scope: scopes.join(' '),
+          ));
+
+      final currentUser = await auth2.getAuthInstance()?.currentUser?.get();
+
+      return gapiUserToPluginUserData(
+        currentUser,
+        serverAuthCode: response?.code,
+      );
+    } on auth2.GoogleAuthSignInError catch (reason) {
+      throw PlatformException(
+        code: reason.error,
+        message: 'Exception raised from GoogleAuth.grantOfflineAccess()',
+        details:
+            'https://developers.google.com/identity/sign-in/web/reference#error_codes_2',
+      );
+    }
   }
 }
