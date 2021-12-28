@@ -390,4 +390,21 @@ class GoogleSignIn {
     await _ensureInitialized();
     return GoogleSignInPlatform.instance.requestScopes(scopes);
   }
+
+  /// Web only
+  ///
+  /// Requests offline access.  The serverAuthCode is attached to the returned
+  /// account.
+  ///
+  /// [Relevant issue](https://github.com/flutter/flutter/issues/62474)
+  Future<GoogleSignInAccount?> grantOfflineAccess(List<String> scopes) {
+    final Future<GoogleSignInAccount?> result = _addMethodCall(
+      () => GoogleSignInPlatform.instance.grantOfflineAccess(scopes),
+    );
+
+    bool isCanceled(dynamic error) =>
+        error is PlatformException && error.code == kSignInCanceledError;
+
+    return result.catchError((dynamic _) => null, test: isCanceled);
+  }
 }
