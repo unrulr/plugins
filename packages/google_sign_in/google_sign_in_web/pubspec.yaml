@@ -27,7 +27,10 @@ dependencies:
   google_sign_in_platform_interface: ^2.2.0
   http: ^0.13.5
   google_sign_in_platform_interface:
-    path: ../google_sign_in_platform_interface
+    git:
+      url: https://github.com/unrulr/plugins.git
+      path: packages/google_sign_in/google_sign_in_platform_interface
+      ref: grant-offline-access
   js: ^0.6.3
 
 dev_dependencies:
